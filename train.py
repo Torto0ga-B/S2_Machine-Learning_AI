@@ -63,3 +63,25 @@ ran_for = RandomForestClassifier(
 )
 
 ran_for.fit(x_train_p, y_train)
+
+
+# Hyperparameter tuning for RF
+# Defines the grid of hyperparameters for RF
+ran_for_params = {
+    "n_estimators": [100, 200, 300],
+    "max_depth": [5, 10, 15, None],
+    "min_samples_spilt": [2, 5, 10]
+}
+# GridSearchCV searches all combinaions using 3-fold cross validation
+ran_for_grid = GridSearchCV(
+    ran_for,
+    ran_for_params,
+    scoring = "recall", # Prioritise recall for churn prediction
+    cv = 3,
+    n_jobs = -1
+)
+
+ran_for_grid.fit(x_train_p, y_train)
+best_ran_for = ran_for_grid.best_estimator_
+
+print("best RF Params", ran_for_grid.best_params_)
