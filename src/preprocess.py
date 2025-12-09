@@ -3,8 +3,13 @@ from sklearn.compose import ColumnTransformer # Allows for different preprocessi
 from sklearn.impute import SimpleImputer # Fills missing values
 from sklearn.preprocessing import OneHotEncoder, StandardScaler # OHE converts categorical variables to numerical format for ML, SS does Z-score normalisation
 
-num_cols = [...] # list of numerical features e.g. tenure, MonthlyCharges
-cat_cols = [...] # list of categorical features e.g. gender, contract
+num_cols = ['tenure', 'MonthlyCharges', 'TotalCharges'] # list of numerical features 
+cat_cols = [
+    'gender', 'SeniorCitizen', 'Partner', 'Dependents', 'PhoneService',
+    'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup',
+    'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies',
+    'Contract', 'PaperlessBilling', 'PaymentMethod'
+] # list of categorical features
 
 numPipline = Pipeline([
     ('imputer', SimpleImputer(strategy='median')), # If the numerical column has blank value, fill with mode
