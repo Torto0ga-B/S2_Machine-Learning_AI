@@ -1,5 +1,8 @@
-from sklearn.model_selection import train_test_split
+import pandas as pd
+import numpy as np
 
-x = df.drop('Churn', axis=1) # Contains all input features
-y = df['Churn'].map({'No':0, 'Yes':1}) # Contains Churn variable mapped to 0 and 1
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
