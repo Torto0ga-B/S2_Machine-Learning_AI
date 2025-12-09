@@ -13,5 +13,7 @@ def evaluateModel(model, x, y):
         "roc_auc": roc_auc_score(y, predictProbeLabel) # Measures how well the model separations 
     }
 
-
+def save_json(data, path):
+    with open(path, "w") as f: # Opens a file at path in write mode
+        json.dump(data, f, indent=4) # writes the data to the file
 
