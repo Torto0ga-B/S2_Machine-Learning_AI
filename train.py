@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import joblib
+import shap
+import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LogisticRegression
@@ -147,3 +150,24 @@ else:
     final_model = log_reg
     print("Selected Model: Logistic Regression")
 
+# Final Test Performance
+
+print("=====FINAL TEST PERFORMANCE=====")
+evaluate(final_model, x_test_p, y_test, "Final Model") # Applies the chosen model to the uneseen test set of data
+
+# Generating SHAP explainations
+
+# Uses TreeExplainer for random forest and LinearExplainer for Logistic Regression
+explainer = shap.TreeExplainer(final_model) if isinstance(final_model, RandomForestClassifier) else shap.LinearExplainer(final_model, x_train_p)
+shap_values = explainer.shap_values(x_test_p)
+
+plt.figure()
+shap.summary_plot(shap_values, x_test_p, show=False)
+plt.savefig("results/shap_summary.png") # uses a sumary plot instead of displaying interactively for the paper
+plt.close()
+
+# Save the model and preprocessor
+joblib.dump(getPreprocessor, "results/preprocessor.joblib")
+joblib.dump(final_model, "results/final_model.joblib")
+# Saves both the preprocessing pipeline and final model for reproduceability
+print("Models saved successfully")
