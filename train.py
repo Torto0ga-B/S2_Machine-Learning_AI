@@ -42,3 +42,24 @@ getPreprocessor.fit(x_train) # Fitted the preprocessor around the training set o
 x_train_p = getPreprocessor.transform(x_train)
 x_val_p = getPreprocessor.transform(x_val)
 x_test_p = getPreprocessor.transform(x_test)
+
+
+# Train the Logistic Regression Algorithm
+
+log_reg = LogisticRegression(
+    max_iter=1000, # Ensures convergence for large feature sets
+    class_weight="balanced", # Due to class imbalance giving churners more weight
+    solver="liblinear" # Works well at solving medium datasets with binary targets
+)
+
+log_reg.fit(x_train_p, y_train)
+
+
+# Train the Random Forest Algorithm
+
+ran_for = RandomForestClassifier(
+    class_weight="balanced",
+    random_state=42
+)
+
+ran_for.fit(x_train_p, y_train)
