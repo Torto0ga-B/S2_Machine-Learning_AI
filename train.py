@@ -13,6 +13,10 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 # Load and prepare the data
 
 df = pd.read_csv("data/Telco_Cusomer_Churn.csv") # Load csv into dataframe
+
+df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
+# Converts the blank spaces to NaN
+
 df['Churn'] = df['Churn'].map({'No': 0, 'Yes': 1}) # Maps the Churn column to binary integers as ML models need numeric targets
 
 x = df.drop("Churn", axis=1)
@@ -40,12 +44,12 @@ print("Train:", x_train.shape, "Val:", x_val.shape, "Test:", x_test.shape)
 
 # Preprocess all the data
 
-getPreprocessor.fit(x_train) # Fitted the preprocessor around the training set of data only, to avoid data leakage
+preprocessor.fit(x_train) # Fitted the preprocessor around the training set of data only, to avoid data leakage
 
 # Transform the training, validation and test sets so that the categorical features are one-hot coded and the numeric features are z-score normalised
-x_train_p = getPreprocessor.transform(x_train)
-x_val_p = getPreprocessor.transform(x_val)
-x_test_p = getPreprocessor.transform(x_test)
+x_train_p = preprocessor.transform(x_train)
+x_val_p = preprocessor.transform(x_val)
+x_test_p = preprocessor.transform(x_test)
 
 
 # Train the Logistic Regression Algorithm
@@ -168,7 +172,7 @@ plt.savefig("results/shap_summary.png") # uses a sumary plot instead of displayi
 plt.close()
 
 # Save the model and preprocessor
-joblib.dump(getPreprocessor, "results/preprocessor.joblib")
+joblib.dump(preprocessor, "results/preprocessor.joblib")
 joblib.dump(final_model, "results/final_model.joblib")
 # Saves both the preprocessing pipeline and final model for reproduceability
 print("Models saved successfully")
