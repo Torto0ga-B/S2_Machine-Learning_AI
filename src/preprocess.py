@@ -20,7 +20,7 @@ def getPreprocessor(df: pd.DataFrame):
 
     catPipeline = Pipeline([
         ('imputer', SimpleImputer(strategy='most_frequent')), # Fills blank values with most frequent category
-        ('onehot', OneHotEncoder(handle_unknown='ignore', sparse=False)) # converts each category to a binary column
+        ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False)) # converts each category to a binary column
     ])
 
     # One unified object that handles all preprocessing when called and ensures it all occurs in the right order
