@@ -15,3 +15,10 @@ catPipeline = Pipeline([
     ('imputer', SimpleImputer(strategy='most_frequent')), # Fills blank values with most frequent category
     ('onehot', OneHotEncoder(handle_unknown='ignore', sparse=False)) # converts each category to a binary column
 ])
+
+# One unified object that handles all preprocessing when called and ensures it all occurs in the right order
+preprocessor = ColumnTransformer([
+    ('num', numPipline, num_cols), # Applies the numeric pipeline to 'num_cols'
+    ('cat', catPipeline, cat_cols) # Applies the categorical pipeline to 'cat_cols'
+])
+
