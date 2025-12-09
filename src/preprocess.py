@@ -6,3 +6,8 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler # OHE converts c
 num_cols = [...] # list of numerical features e.g. tenure, MonthlyCharges
 cat_cols = [...] # list of categorical features e.g. gender, contract
 
+numPipline = Pipeline(
+    ('imputer', SimpleImputer(strategy='mode')), # If the numerical column has blank value, fill with mode
+    ('scalar', StandardScaler()) # Standardises with z-score
+)
+
