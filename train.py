@@ -57,34 +57,34 @@ log_reg.fit(x_train_p, y_train)
 
 # Train the Random Forest Algorithm
 
-ran_for = RandomForestClassifier(
+RF = RandomForestClassifier(
     class_weight="balanced",
     random_state=42
 )
 
-ran_for.fit(x_train_p, y_train)
+RF.fit(x_train_p, y_train)
 
 
 # Hyperparameter tuning for RF
 # Defines the grid of hyperparameters for RF
-ran_for_params = {
+RF_params = {
     "n_estimators": [100, 200, 300],
     "max_depth": [5, 10, 15, None],
     "min_samples_spilt": [2, 5, 10]
 }
 # GridSearchCV searches all combinaions using 3-fold cross validation
-ran_for_grid = GridSearchCV(
-    ran_for,
-    ran_for_params,
+RF_grid = GridSearchCV(
+    RF,
+    RF_params,
     scoring = "recall", # Prioritise recall for churn prediction
     cv = 3,
     n_jobs = -1
 )
 
-ran_for_grid.fit(x_train_p, y_train)
-best_ran_for = ran_for_grid.best_estimator_
+RF_grid.fit(x_train_p, y_train)
+best_RF = RF_grid.best_estimator_
 
-print("best RF Params", ran_for_grid.best_params_)
+print("best RF Params", RF_grid.best_params_)
 
 
 # Evaluate the models using the validation set of data
@@ -107,4 +107,43 @@ def evaluate(model, xv, yv, name):
         "f1": f1_score(yv, pred),
         "roc_auc": roc_auc_score(yv, prob)
     }
+
+metrics_LR = evaluate(log_reg, x_val_p, y_val, "Logistic Regression")
+metrics_RF = evaluate(best_RF, x_val_p, y_val, "Random Forest (Tuned)")
+
+# Decision algorithm for best model
+score_RF = 0
+score_LR = 0
+
+if metrics_RF["accuracy"] > metrics_LR["accuracy"]:
+    score_RF = score_RF + 1
+elif metrics_LR["accuracy"] > metrics_RF["accuracy"]:
+    score_LR = score_LR + 1
+
+if metrics_RF["precision"] > metrics_LR["precision"]:
+    score_RF = score_RF + 1
+elif metrics_LR["precision"] > metrics_RF["precision"]:
+    score_LR = score_LR + 1
+
+if metrics_RF["recall"] > metrics_LR["recall"]:
+    score_RF = score_RF + 1
+elif metrics_LR["recall"] > metrics_RF["recall"]:
+    score_LR = score_LR + 1
+
+if metrics_RF["f1"] > metrics_LR["f1"]:
+    score_RF = score_RF + 1
+elif metrics_LR["f1"] > metrics_RF["f1"]:
+    score_LR = score_LR + 1
+
+if metrics_RF["roc_auc"] > metrics_LR["roc_auc"]:
+    score_RF = score_RF + 1
+elif metrics_LR["roc_auc"] > metrics_RF["roc_auc"]:
+    score_LR = score_LR + 1
+
+if score_RF > score_LR:
+    final_model = best_RF
+    print("Selected Model: Random Forest")
+else:
+    final_model = log_reg
+    print("Selected Model: Logistic Regression")
 
