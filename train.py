@@ -85,3 +85,26 @@ ran_for_grid.fit(x_train_p, y_train)
 best_ran_for = ran_for_grid.best_estimator_
 
 print("best RF Params", ran_for_grid.best_params_)
+
+
+# Evaluate the models using the validation set of data
+
+def evaluate(model, xv, yv, name):
+    pred = model.predict(xv)
+    prob = model.predict_proba(xv)[:, 1] # Needed for the ROC-AUC
+
+    print("=====", name, "=====")
+    print("Accuracy:",  accuracy_score(yv, pred))
+    print("Precision:", precision_score(yv, pred))
+    print("Recall:",    recall_score(yv, pred))
+    print("F1:",        f1_score(yv, pred))
+    print("ROC-AUC:",   roc_auc_score(yv, prob))
+    # Returns the metrics in a dictionary for an easy comparison
+    return {
+        "accuracy": accuracy_score(yv, pred),
+        "precision": precision_score(yv, pred),
+        "recall": recall_score(yv, pred),
+        "f1": f1_score(yv, pred),
+        "roc_auc": roc_auc_score(yv, prob)
+    }
+
